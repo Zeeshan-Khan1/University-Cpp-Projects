@@ -1,0 +1,149 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+class Vehicle {
+protected:
+    string name;
+    string destination;
+    double distance;
+    double rate_per_km;
+    string payment;
+    int rating;
+
+public:
+    Vehicle(string name, string dest, double dist, string paymt, double rate)
+        : name(name), destination(dest), distance(dist), payment(paymt), rate_per_km(rate), rating(0) {}
+
+    double calculateCost() {
+        return distance * rate_per_km;
+    }
+
+    void displaySummary(string vehicleType) {
+        cout << "Vehicle Type: " << vehicleType << endl;
+        cout << "Name: " << name << endl;
+        cout << "Destination: " << destination << endl;
+        cout << "Distance: " << distance << " km" << endl;
+        cout << "Payment source: " << payment << endl;
+        cout << "Total Cost: Rs " << calculateCost() << endl;
+        getRating();
+        cout << "Thank you for using our service" << endl;
+        saveToFile(vehicleType);
+        cout << "********************************************" << endl;
+    }
+
+    void getRating() {
+        cout << "Please rate our service (1 to 5): ";
+        cin >> rating;
+        while (rating < 1 || rating > 5) {
+            cout << "Invalid input. Please enter a number between 1 and 5: "<<endl;
+            cin>> rating;
+        }
+    }
+
+    void saveToFile(string vehicleType) {
+        ofstream file("transport_summary.txt", ios::app);
+        if (file.is_open()) {
+            file << "Vehicle Type: " << vehicleType << endl;
+            file << "Name: " << name << endl;
+            file << "Destination: " << destination << endl;
+            file << "Distance: " << distance << " km" << endl;
+            file << "Payment source: " << payment << endl;
+            file << "Total Cost: Rs " << calculateCost() << endl;
+            file << "Rating: " << rating << endl; 
+            file << "Thank you for using our service" << endl;
+	         
+void displayAdditionalMenu() {
+    cout << endl;
+    cout << "Select an option:" << endl;
+    cout << "1. Show saved data" << endl;
+    cout << "2. Exit" << endl;
+    cout << "Enter your choice:" << endl;
+    cout << endl;
+}
+
+int main() {
+    string name; 
+	string destination; 
+	string payment;
+    double distance;
+    int choice;
+
+    cout << "Welcome to the Vehicle Rental System:" << endl;
+    cout << endl;
+
+    displayMenu();
+    cin >> choice;
+
+    if (choice < 1 || choice > 5) {
+        cout << "Invalid choice. Exiting..." << endl;
+        return 1;
+    }
+
+    cout << "Enter your name: ";
+    cin.ignore();
+    getline(cin, name);
+
+    cout << "Enter your destination: ";
+    getline(cin, destination);
+
+    cout << "Enter the distance to be traveled (in km): ";
+    cin >> distance;
+    cin.ignore();
+
+    cout << "Enter your payment source: ";
+    getline(cin, payment);
+    cout << endl;
+
+    switch (choice) {
+    case 1: {
+        Car car(name, destination, distance, payment);
+        car.displaySummary("Car");
+        break;
+    }
+    case 2: {
+        Rickshaw rickshaw(name, destination, distance, payment);
+        rickshaw.displaySummary("Rickshaw");
+        break;
+    }
+    case 3: {
+        Bike bike(name, destination, distance, payment);
+        bike.displaySummary("Bike");
+        break;
+    }
+    case 4: {
+        MiniCar miniCar(name, destination, distance, payment);
+        miniCar.displaySummary("Mini Car");
+        break;
+    }
+    case 5: {
+        ComfortCar comfortCar(name, destination, distance, payment);
+        comfortCar.displaySummary("Comfort Car");
+        break;
+    }
+    default:
+        cout << "Invalid choice. Exiting..." << endl;
+        return 1;
+    }
+
+    displayAdditionalMenu();
+    cin >> choice;
+
+    switch (choice) {
+    case 1:
+        displaySavedData();
+        break;
+    case 2:
+        cout << "Exiting..." << endl;
+        break;
+    default:
+        cout << "Invalid choice." << endl;
+        break;
+    }
+
+    cout << "Thank you for using our service!" << endl;
+
+    return 0;
+}
